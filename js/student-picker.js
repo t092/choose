@@ -141,6 +141,8 @@ function selectFinalStudent(unselectedStudents) {
  * 完成選擇
  */
 function completeSelection(selectedStudent) {
+    if (typeof stopSelectionSound === 'function') stopSelectionSound();
+
     if (!selectedStudent) {
         pickerState.isSelecting = false;
         return;
@@ -256,18 +258,168 @@ function toggleAudio() {
     console.log(`音效狀態: ${pickerState.audioEnabled ? '開啟' : '關閉'}`);
 }
 
-/**
- * 播放選擇音效（模擬）
- */
-function playSelectionSound() {
-    console.log('🔊 播放選擇音效');
+// =================================
+// 蒸氣龐克音效系統 (Web Audio API)
+// =================================
+let audioCtx = null;
+let suspenseOscillator1 = null;
+let suspenseOscillator2 = null;
+let suspenseGain = null;
+let suspenseInterval = null;
+
+function initAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
 }
 
 /**
- * 播放完成音效（模擬）
+ * 播放選擇音效（緊張感時鐘/齒輪聲）
+ */
+function playSelectionSound() {
+    console.log('🔊 播放選擇音效');
+    if (!pickerState.audioEnabled) return;
+    initAudioContext();
+    
+    // 產生規律的齒輪/時鐘滴答聲，越來越快，音量更大
+    let tickSpeed = 250;
+    
+    const playTick = () => {
+        if (!pickerState.isSelecting) {
+            clearTimeout(suspenseInterval);
+            return;
+        }
+        
+        const osc = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'square';
+        osc2.type = 'sawtooth';
+        
+        // 更尖銳、更響亮的機械滴答聲
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+        osc2.frequency.setValueAtTime(150, audioCtx.currentTime);
+        
+        // 音量推至極限
+        gain.gain.setValueAtTime(1.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        
+        osc.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start();
+        osc2.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+        osc2.stop(audioCtx.currentTime + 0.15);
+        
+        // 加速，製造更強的緊張感
+        if (tickSpeed > 40) {
+            tickSpeed -= 15;
+        }
+        
+        suspenseInterval = setTimeout(playTick, tickSpeed);
+    };
+    
+    playTick();
+    
+    // 背景持續低鳴（蒸汽鍋爐壓力聲），音量和頻率不斷上升
+    suspenseOscillator1 = audioCtx.createOscillator();
+    suspenseOscillator2 = audioCtx.createOscillator();
+    suspenseGain = audioCtx.createGain();
+    
+    suspenseOscillator1.type = 'sawtooth';
+    suspenseOscillator1.frequency.setValueAtTime(50, audioCtx.currentTime);
+    suspenseOscillator1.frequency.linearRampToValueAtTime(120, audioCtx.currentTime + 3);
+    
+    suspenseOscillator2.type = 'square';
+    suspenseOscillator2.frequency.setValueAtTime(51, audioCtx.currentTime); // 微微失調產生嗡嗡聲
+    suspenseOscillator2.frequency.linearRampToValueAtTime(122, audioCtx.currentTime + 3);
+    
+    // 逐漸變大聲，極具壓迫感
+    suspenseGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    suspenseGain.gain.linearRampToValueAtTime(1.0, audioCtx.currentTime + 3);
+    
+    suspenseOscillator1.connect(suspenseGain);
+    suspenseOscillator2.connect(suspenseGain);
+    suspenseGain.connect(audioCtx.destination);
+    
+    suspenseOscillator1.start();
+    suspenseOscillator2.start();
+}
+
+/**
+ * 停止選擇音效
+ */
+function stopSelectionSound() {
+    if (suspenseInterval) clearTimeout(suspenseInterval);
+    if (suspenseGain && audioCtx) {
+        try {
+            suspenseGain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            if (suspenseOscillator1) suspenseOscillator1.stop(audioCtx.currentTime + 0.2);
+            if (suspenseOscillator2) suspenseOscillator2.stop(audioCtx.currentTime + 0.2);
+        } catch (e) {}
+    }
+}
+
+/**
+ * 播放完成音效（巨大蒸汽汽笛與銅鐘聲）
  */
 function playCompleteSound() {
     console.log('🔊 播放完成音效');
+    stopSelectionSound();
+    
+    if (!pickerState.audioEnabled) return;
+    initAudioContext();
+    
+    const duration = 3.0;
+    
+    // 銅鐘主音 - 非常響亮
+    const bellOsc1 = audioCtx.createOscillator();
+    const bellOsc2 = audioCtx.createOscillator();
+    const bellGain = audioCtx.createGain();
+    
+    bellOsc1.type = 'sine';
+    bellOsc1.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+    bellOsc2.type = 'triangle';
+    bellOsc2.frequency.setValueAtTime(1046.50, audioCtx.currentTime); // C6
+    
+    bellGain.gain.setValueAtTime(2.0, audioCtx.currentTime); // 過載音量
+    bellGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+    
+    bellOsc1.connect(bellGain);
+    bellOsc2.connect(bellGain);
+    bellGain.connect(audioCtx.destination);
+    
+    // 蒸汽汽笛聲 (和弦)
+    const whistleGain = audioCtx.createGain();
+    whistleGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+    whistleGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration - 1.0);
+    
+    const frequencies = [349.23, 440.00, 659.25]; // F4, A4, E5 華麗的和弦
+    const whistles = frequencies.map(freq => {
+        const osc = audioCtx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.connect(whistleGain);
+        return osc;
+    });
+    
+    whistleGain.connect(audioCtx.destination);
+    
+    // 啟動所有音源
+    bellOsc1.start();
+    bellOsc2.start();
+    whistles.forEach(osc => osc.start());
+    
+    bellOsc1.stop(audioCtx.currentTime + duration);
+    bellOsc2.stop(audioCtx.currentTime + duration);
+    whistles.forEach(osc => osc.stop(audioCtx.currentTime + duration - 1.0));
 }
 
 /**
