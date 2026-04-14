@@ -1,30 +1,134 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>銝撟港???- ?豢除樴??訾犖蝟餌絞</title>
-    
-    <!-- Google Fonts -->
+    <title>一年一班 - 蒸氣龐克選人系統</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- 璅?? -->
-    <link rel="stylesheet" href="../css/steampunk.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* ===== ?剔??撠璅?? ===== */
+        /* ===== 蒸氣龐克核心變數 ===== */
         :root {
-            --selection-glow: #ffd700;
+            --sp-brown: #3a2317;
+            --sp-copper: #b87333;
+            --sp-bronze: #cd7f32;
+            --sp-gold: #daa520;
+            --sp-rust: #9e3e0f;
+            --sp-dark: #1a120c;
+            --sp-white: #f8f4e9;
+            --sp-gray: #8b7355;
+            --font-title: 'Cinzel Decorative', serif;
+            --font-content: 'Cinzel', serif;
+            --font-zh: 'Microsoft JhengHei', serif;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-content);
+            background: linear-gradient(135deg, var(--sp-dark), var(--sp-brown));
+            color: var(--sp-white);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== 背景效果 ===== */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(184, 115, 51, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(218, 165, 32, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 老電視掃描線效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 100;
+            animation: scanline-move 0.5s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
+        }
+
+        /* 載入畫面 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 18, 12, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: var(--sp-gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px var(--sp-copper);
+        }
+
+        .loading-gear {
+            width: 100px;
+            height: 100px;
+            border: 8px solid var(--sp-copper);
+            border-top: 8px solid var(--sp-gold);
+            border-radius: 50%;
+            animation: loading-rotate 1s linear infinite;
+            box-shadow: 0 0 30px rgba(184, 115, 51, 0.5);
+        }
+
+        @keyframes loading-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 主容器 ===== */
         .class-page-container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 1rem;
+            position: relative;
+            z-index: 10;
         }
 
-        /* ?璅? */
+        /* ===== 頁面標題 ===== */
         .class-header {
             text-align: center;
             padding: 1.5rem 0;
@@ -37,10 +141,10 @@
             left: 1rem;
             top: 1rem;
             padding: 0.8rem 1.5rem;
-            background: linear-gradient(135deg, var(--steampunk-bronze), var(--steampunk-copper));
-            border: 2px solid var(--steampunk-gold);
+            background: linear-gradient(135deg, var(--sp-bronze), var(--sp-copper));
+            border: 2px solid var(--sp-gold);
             border-radius: 25px;
-            color: var(--steam-white);
+            color: var(--sp-white);
             text-decoration: none;
             font-family: var(--font-content);
             font-weight: 600;
@@ -51,107 +155,158 @@
         .back-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            background: linear-gradient(135deg, var(--steampunk-gold), var(--steampunk-copper));
+            background: linear-gradient(135deg, var(--sp-gold), var(--sp-copper));
         }
 
         .class-title {
             font-family: var(--font-title);
-            font-size: 3rem;
-            color: var(--steampunk-gold);
-            text-shadow: 2px 2px 0 var(--steampunk-copper), 4px 4px 0 rgba(0,0,0,0.5);
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            color: var(--sp-gold);
+            text-shadow: 
+                2px 2px 0 var(--sp-copper),
+                4px 4px 0 rgba(0,0,0,0.5),
+                0 0 20px rgba(218, 165, 32, 0.5);
+            margin-bottom: 0.5rem;
             letter-spacing: 0.1em;
         }
 
         .class-subtitle {
+            font-family: var(--font-content);
             font-size: 1.2rem;
-            color: var(--steampunk-bronze);
-            letter-spacing: 0.1em;
+            color: var(--sp-bronze);
+            letter-spacing: 0.2em;
         }
 
-        /* 銝餃摰孵???*/
+        /* ===== 主內容區域 ===== */
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 350px;
+            grid-template-columns: 1fr 400px;
             gap: 2rem;
             min-height: 600px;
         }
 
-        /* ???脣???*/
+        /* ===== 文字雲容器 ===== */
         .text-cloud-container {
-            background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
-            border: 3px solid var(--steampunk-copper);
+            background: linear-gradient(135deg, rgba(58, 35, 23, 0.9), rgba(26, 18, 12, 0.95));
+            border: 4px solid var(--sp-copper);
             border-radius: 20px;
             padding: 2rem;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(184, 115, 51, 0.2);
-            min-height: 500px;
+            box-shadow: 
+                0 0 30px rgba(184, 115, 51, 0.3),
+                inset 0 0 50px rgba(184, 115, 51, 0.1);
+            min-height: 600px;
         }
 
+        /* 邊框裝飾 */
         .text-cloud-container::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, transparent 70%, rgba(184, 115, 51, 0.1));
-            pointer-events: none;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--sp-gold), var(--sp-copper), var(--sp-bronze), var(--sp-gold));
+            border-radius: 20px;
+            opacity: 0.3;
+            z-index: -1;
         }
 
         .text-cloud-area {
             position: relative;
             width: 100%;
-            height: 450px;
+            height: 550px;
             overflow: hidden;
         }
 
-        /* ?桀飛??摮?? */
+        /* 文字雲元素 */
         .student-cloud-item {
             position: absolute;
             padding: 0.8rem 1.2rem;
-            background: linear-gradient(135deg, var(--steampunk-bronze), var(--steampunk-copper));
-            border: 2px solid var(--steampunk-gold);
+            background: linear-gradient(135deg, var(--sp-bronze), var(--sp-copper));
+            border: 2px solid var(--sp-gold);
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
             user-select: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 
+                0 4px 10px rgba(0,0,0,0.4),
+                inset 0 0 10px rgba(255,255,255,0.1);
+            font-family: var(--font-content);
+        }
+
+        .student-cloud-item {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+            75% {
+                transform: translateY(-15px) rotate(1deg);
+            }
         }
 
         .student-cloud-item:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
             z-index: 10;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 0 20px var(--sp-gold);
         }
 
         .student-cloud-item.highlighted {
-            background: linear-gradient(135deg, var(--steampunk-gold), #ffd700);
+            background: linear-gradient(135deg, var(--sp-gold), #ffd700);
             border-color: #fff;
             transform: scale(1.3);
             z-index: 20;
-            box-shadow: 0 0 20px var(--selection-glow);
+            box-shadow: 0 0 30px var(--sp-gold);
         }
 
         .student-cloud-item.selected {
-            background: linear-gradient(135deg, #ffd700, var(--steampunk-gold));
+            background: linear-gradient(135deg, #ffd700, var(--sp-gold));
             border-color: #fff;
             transform: scale(1.5);
             z-index: 30;
-            animation: selection-glow 1s ease;
+            box-shadow: 0 0 50px var(--sp-gold);
+            animation: selected-pulse 1s ease infinite;
         }
 
-        @keyframes selection-glow {
-            0%, 100% { box-shadow: 0 0 30px var(--selection-glow); }
-            50% { box-shadow: 0 0 50px var(--selection-growth), 0 0 70px var(--selection-glow); }
+        @keyframes selected-pulse {
+            0%, 100% {
+                box-shadow: 0 0 30px var(--sp-gold);
+            }
+            50% {
+                box-shadow: 0 0 60px var(--sp-gold), 0 0 100px #ffd700;
+            }
+        }
+
+        /* 閃動效果（抽人時） */
+        .student-cloud-item.flash {
+            animation: flash-animation 0.1s ease infinite;
+        }
+
+        @keyframes flash-animation {
+            0%, 100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            50% {
+                opacity: 0.3;
+                filter: brightness(2);
+            }
         }
 
         .seat-number {
-            font-family: var(--font-content);
             font-size: 1rem;
             font-weight: 700;
-            color: var(--steampunk-dark);
+            color: var(--sp-dark);
             margin-right: 0.5rem;
         }
 
@@ -159,38 +314,42 @@
             font-family: var(--font-zh);
             font-size: 1.4rem;
             font-weight: 700;
-            color: var(--steam-white);
+            color: var(--sp-white);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* ?喳?批?Ｘ */
+        /* ===== 控制面板 ===== */
         .control-panel {
-            background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
-            border: 3px solid var(--steampunk-copper);
+            background: linear-gradient(135deg, rgba(58, 35, 23, 0.95), rgba(26, 18, 12, 0.98));
+            border: 4px solid var(--sp-copper);
             border-radius: 20px;
             padding: 2rem;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.5),
+                inset 0 0 30px rgba(184, 115, 51, 0.1);
             height: fit-content;
-            box-shadow: inset 0 0 20px rgba(184, 115, 51, 0.2);
         }
 
         .panel-title {
             font-family: var(--font-title);
             font-size: 1.8rem;
-            color: var(--steampunk-gold);
+            color: var(--sp-gold);
             text-align: center;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--steampunk-copper);
+            border-bottom: 2px solid var(--sp-copper);
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
         }
 
-        /* ?訾犖?? */
+        /* 選人按鈕 */
         .select-button {
             width: 100%;
             padding: 1.5rem 2rem;
             margin-bottom: 2rem;
-            background: linear-gradient(135deg, var(--steampunk-gold), var(--steampunk-copper));
-            border: 3px solid var(--steampunk-bronze);
+            background: linear-gradient(135deg, var(--sp-gold), var(--sp-copper));
+            border: 3px solid var(--sp-bronze);
             border-radius: 35px;
-            color: var(--steampunk-dark);
+            color: var(--sp-dark);
             font-family: var(--font-title);
             font-size: 1.5rem;
             font-weight: 700;
@@ -198,12 +357,13 @@
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
             letter-spacing: 0.1em;
+            text-shadow: none;
         }
 
         .select-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            background: linear-gradient(135deg, #ffd700, var(--steampunk-gold));
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #ffd700, var(--sp-gold));
         }
 
         .select-button:active {
@@ -216,10 +376,10 @@
             transform: none;
         }
 
-        /* 蝯?憿舐內???*/
+        /* 結果顯示區域 */
         .result-area {
-            background: rgba(0,0,0,0.3);
-            border: 2px solid var(--steampunk-copper);
+            background: rgba(0,0,0,0.4);
+            border: 2px solid var(--sp-copper);
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
@@ -233,39 +393,41 @@
         .result-label {
             font-family: var(--font-content);
             font-size: 1rem;
-            color: var(--steam-gray);
+            color: var(--sp-gray);
             margin-bottom: 0.5rem;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
 
         .result-display {
             font-family: var(--font-title);
-            font-size: 2rem;
-            color: var(--steampunk-gold);
+            font-size: 2.2rem;
+            color: var(--sp-gold);
             text-align: center;
             min-height: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            text-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
         }
 
         .result-display .seat {
             font-size: 1.5rem;
             margin-right: 0.5rem;
-            color: var(--steampunk-copper);
+            color: var(--sp-copper);
         }
 
         .result-display .name {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
         }
 
-        /* 蝯梯?鞈? */
+        /* 統計資訊 */
         .stats-area {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--steampunk-copper);
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--sp-copper);
             border-radius: 10px;
             padding: 1rem;
+            margin-bottom: 1rem;
         }
 
         .stat-item {
@@ -277,35 +439,37 @@
         }
 
         .stat-label {
-            color: var(--steampunk-bronze);
+            color: var(--sp-bronze);
         }
 
         .stat-value {
-            color: var(--steam-white);
+            color: var(--sp-white);
             font-weight: 600;
         }
 
-        /* ?單??批 */
-        .audio-controls {
+        /* 開關控制 */
+        .audio-controls, .selection-controls {
             margin-top: 1.5rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--steampunk-copper);
+            border-top: 1px solid var(--sp-copper);
         }
 
-        .audio-toggle {
+        .audio-toggle, .selection-toggle {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 0.8rem;
             font-family: var(--font-content);
             font-size: 0.9rem;
-            color: var(--steam-gray);
+            color: var(--sp-gray);
+            cursor: pointer;
         }
 
         .toggle-switch {
             width: 50px;
             height: 25px;
-            background: var(--steampunk-dark);
-            border: 2px solid var(--steampunk-copper);
+            background: var(--sp-dark);
+            border: 2px solid var(--sp-copper);
             border-radius: 13px;
             position: relative;
             cursor: pointer;
@@ -313,7 +477,7 @@
         }
 
         .toggle-switch.active {
-            background: var(--steampunk-gold);
+            background: var(--sp-gold);
         }
 
         .toggle-switch::before {
@@ -323,7 +487,7 @@
             left: 2px;
             width: 17px;
             height: 17px;
-            background: var(--steam-white);
+            background: var(--sp-white);
             border-radius: 50%;
             transition: transform 0.3s ease;
         }
@@ -332,7 +496,7 @@
             transform: translateX(25px);
         }
 
-        /* ?踵?撘身閮?*/
+        /* ===== 響應式設計 ===== */
         @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -340,7 +504,15 @@
             }
 
             .class-title {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
+            }
+
+            .text-cloud-container {
+                min-height: 450px;
+            }
+
+            .text-cloud-area {
+                height: 400px;
             }
         }
 
@@ -350,7 +522,7 @@
             }
 
             .class-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .text-cloud-container {
@@ -358,7 +530,7 @@
             }
 
             .text-cloud-area {
-                height: 350px;
+                height: 300px;
             }
 
             .control-panel {
@@ -386,185 +558,301 @@
                 display: inline-block;
             }
         }
-
-        /* 頛? */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(26, 18, 12, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-overlay.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-text {
-            font-family: var(--font-title);
-            font-size: 2rem;
-            color: var(--steampunk-gold);
-            margin-bottom: 2rem;
-            letter-spacing: 0.1em;
-        }
-
-        .loading-gear {
-            width: 100px;
-            height: 100px;
-            border: 5px solid var(--steampunk-copper);
-            border-top: 5px solid var(--steampunk-gold);
-            border-radius: 50%;
-            animation: loading-rotate 1s linear infinite;
-        }
-
-        @keyframes loading-rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
-    <!-- 頛?恍 -->
+    <!-- 背景效果 -->
+    <div class="bg-overlay"></div>
+    <div class="scanlines"></div>
+
+    <!-- 載入畫面 -->
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-text">蝟餌絞???葉...</div>
+        <div class="loading-text">系統初始化中...</div>
         <div class="loading-gear"></div>
     </div>
 
-    <!-- 銝餃捆??-->
+    <!-- 主容器 -->
     <div class="class-page-container">
-        <!-- ?璅? -->
+        <!-- 頁面標題 -->
         <header class="class-header">
-            <a href="../index.html" class="back-button">??餈?銝駁?</a>
-            <h1 class="class-title">銝撟港???/h1>
+            <a href="../index.html" class="back-button">← 返回主頁</a>
+            <h1 class="class-title">一年一班</h1>
             <p class="class-subtitle">Class 1 - Steampunk Selector</p>
         </header>
 
-        <!-- 銝餃摰孵???-->
+        <!-- 主內容區域 -->
         <div class="main-content">
-            <!-- ???脣???-->
+            <!-- 文字雲區域 -->
             <div class="text-cloud-container">
                 <div class="text-cloud-area" id="textCloudArea">
-                    <!-- 摮貊????脣???JavaScript ???? -->
+                    <!-- 學生文字雲將由 JavaScript 動態生成 -->
                 </div>
             </div>
 
-            <!-- ?批?Ｘ -->
+            <!-- 控制面板 -->
             <aside class="control-panel">
-                <h2 class="panel-title">?批?Ｘ</h2>
+                <h2 class="panel-title">控制面板</h2>
                 
-                <!-- ?訾犖?? -->
+                <!-- 選人按鈕 -->
                 <button class="select-button" id="selectButton" onclick="startSelection()">
-                    ?? ???訾犖 ??
+                    ⚙️ 開始選人 ⚙️
                 </button>
 
-                <!-- 蝯?憿舐內 -->
+                <!-- 結果顯示 -->
                 <div class="result-area">
-                    <div class="result-label">?訾葉摮貊?</div>
+                    <div class="result-label">選中學生</div>
                     <div class="result-display" id="resultDisplay">
-                        <span style="color: var(--steam-gray); font-size: 1.2rem;">蝑??豢?...</span>
+                        <span style="color: var(--sp-gray); font-size: 1.2rem;">等待選擇...</span>
                     </div>
                 </div>
 
-                <!-- 蝯梯?鞈? -->
+                <!-- 統計資訊 -->
                 <div class="stats-area">
                     <div class="stat-item">
-                        <span class="stat-label">?剔?鈭箸嚗?/span>
+                        <span class="stat-label">班級人數：</span>
                         <span class="stat-value" id="totalStudents">35</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">撌脰◤?訾葉嚗?/span>
+                        <span class="stat-label">已被選中：</span>
                         <span class="stat-value" id="selectedCount">0</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">?拐?鈭箸嚗?/span>
+                        <span class="stat-label">剩余人數：</span>
                         <span class="stat-value" id="remainingCount">35</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">?訾犖???</span>
-                        <span class="stat-value" id="selectionStatus">敺銝?/span>
                     </div>
                 </div>
 
-                <!-- ?單??批 -->
+                <!-- 音效控制 -->
                 <div class="audio-controls">
-                    <div class="audio-toggle">
-                        <span>?單???</span>
-                        <div class="toggle-switch active" id="audioToggle" onclick="toggleAudio()"></div>
-                    </div>\n</div>\n\n<!-- 重复抽选控制 -->\n<div class='selection-controls'>\n    <div class='selection-toggle'>\n        <span>重复抽选</span>\n        <div class='toggle-switch' id='repeatToggle' onclick='toggleRepeat()'></div>\n    </div>\n</div>\n\n</div>
+                    <div class="audio-toggle" onclick="toggleAudio()">
+                        <span>音效開關</span>
+                        <div class="toggle-switch active" id="audioToggle"></div>
+                    </div>
+                </div>
+
+                <!-- 重复抽选控制 -->
+                <div class="selection-controls">
+                    <div class="selection-toggle" onclick="toggleRepeat()">
+                        <span id="repeatLabel">重复抽選（已關閉）</span>
+                        <div class="toggle-switch" id="repeatToggle"></div>
+                    </div>
                 </div>
             </aside>
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="../js/text-cloud.js"></script>
-    <script src="../js/student-picker.js"></script>
     <script>
-        // ?剔?撠惇?豢? - 銝撟港??剖飛??        const currentClassData = [
-            { seat: '01', name: '???? },
-            { seat: '02', name: '???? },
-            { seat: '03', name: '撘萄之?? },
-            { seat: '04', name: '?喳?蝢? },
-            { seat: '05', name: '??撘? },
-            { seat: '06', name: '???? },
-            { seat: '07', name: '暺?鞊? },
-            { seat: '08', name: '?喃蔔?? },
-            { seat: '09', name: '?∪?蝧? },
-            { seat: '10', name: '璆帘瘨? },
-            { seat: '11', name: '閮勗遣摰? },
-            { seat: '12', name: '?剝??? },
-            { seat: '13', name: '雓蝧? },
-            { seat: '14', name: '?冽?憍? },
-            { seat: '15', name: '?賭??? },
-            { seat: '16', name: '?暸??? },
-            { seat: '17', name: '??摰? },
-            { seat: '18', name: '??摰? },
-            { seat: '19', name: '瘙??? },
-            { seat: '20', name: '雿??? },
-            { seat: '21', name: '撱?撱? },
-            { seat: '22', name: '?蔔?? },
-            { seat: '23', name: '?曹縑蝢? },
-            { seat: '24', name: '?剝??? },
-            { seat: '25', name: '蝪⊥?鞊? },
-            { seat: '26', name: '鋡??? },
-            { seat: '27', name: '??? },
-            { seat: '28', name: '蝧??? },
-            { seat: '29', name: '皞怠振鞊? },
-            { seat: '30', name: '雿?憍? },
-            { seat: '31', name: '??摰? },
-            { seat: '32', name: '皜賊??? },
-            { seat: '33', name: '??? },
-            { seat: '34', name: '?喲??? },
-            { seat: '35', name: '撘萄振鞊? }
+        // ===== 學生數據 =====
+        const currentClassData = [
+            { seat: '01', name: '王小明' }, { seat: '02', name: '李小華' }, { seat: '03', name: '張大偉' },
+            { seat: '04', name: '陳小美' }, { seat: '05', name: '劉小強' }, { seat: '06', name: '林雅惠' },
+            { seat: '07', name: '黃志豪' }, { seat: '08', name: '吳佳琪' }, { seat: '09', name: '蔡宗翰' },
+            { seat: '10', name: '楊詩涵' }, { seat: '11', name: '許建宏' }, { seat: '12', name: '鄭雅玲' },
+            { seat: '13', name: '謝承翰' }, { seat: '14', name: '周曉婷' }, { seat: '15', name: '施俊傑' },
+            { seat: '16', name: '曾郁珊' }, { seat: '17', name: '蘇冠宇' }, { seat: '18', name: '葉靜宜' },
+            { seat: '19', name: '江志偉' }, { seat: '20', name: '何淑芬' }, { seat: '21', name: '廖威廷' },
+            { seat: '22', name: '鐘佳蓉' }, { seat: '23', name: '邱信義' }, { seat: '24', name: '郭雅雯' },
+            { seat: '25', name: '簡明豪' }, { seat: '26', name: '袁美玲' }, { seat: '27', name: '林凱文' },
+            { seat: '28', name: '翁雅琪' }, { seat: '29', name: '溫家豪' }, { seat: '30', name: '余雅婷' },
+            { seat: '31', name: '葉俊宏' }, { seat: '32', name: '游雅慧' }, { seat: '33', name: '李智偉' },
+            { seat: '34', name: '陳雅萍' }, { seat: '35', name: '張家豪' }
         ];
 
-        // ?????        document.addEventListener('DOMContentLoaded', function() {
-            initializeClassPage();
+        // ===== 狀態管理 =====
+        const state = {
+            selectedStudents: new Set(),
+            isSelecting: false,
+            audioEnabled: true,
+            repeatEnabled: false
+        };
+
+        // ===== 初始化 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePage();
         });
 
-        function initializeClassPage() {
-            // ?梯?頛?恍
+        function initializePage() {
+            // 隱藏載入畫面
             setTimeout(() => {
                 document.getElementById('loadingOverlay').classList.add('fade-out');
-            }, 1000);
+            }, 800);
 
-            // ????摮
+            // 初始化文字雲
             const textCloudArea = document.getElementById('textCloudArea');
-            initializeTextCloud(textCloudArea, currentClassData);
+            createTextCloud(textCloudArea, currentClassData);
 
-            // ???鈭箇頂蝯?            initializeStudentPicker(currentClassData);
+            console.log('一年一班初始化完成 🎓⚙️');
+        }
 
-            // ?????            initializeAudio();
+        // ===== 文字雲系統 =====
+        function createTextCloud(container, students) {
+            container.innerHTML = '';
 
-            console.log('銝撟港??剝??Ｗ?憪?摰? ????');
+            students.forEach((student, index) => {
+                const element = document.createElement('div');
+                element.className = 'student-cloud-item';
+                element.id = `student-${student.seat}`;
+                element.innerHTML = `
+                    <span class="seat-number">${student.seat}</span>
+                    <span class="student-name">${student.name}</span>
+                `;
+                
+                // 隨機大小
+                const size = 1 + Math.random() * 0.5;
+                element.style.fontSize = `${size}rem`;
+                
+                // 隨機動畫延遲
+                element.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(element);
+            });
+
+            // 隨機位置
+            randomizePositions(container);
+        }
+
+        function randomizePositions(container) {
+            const items = container.querySelectorAll('.student-cloud-item');
+            const containerWidth = container.offsetWidth || 800;
+            const containerHeight = container.offsetHeight || 500;
+
+            items.forEach((item, index) => {
+                const itemWidth = 100;
+                const itemHeight = 50;
+
+                const maxX = Math.max(0, containerWidth - itemWidth - 40);
+                const maxY = Math.max(0, containerHeight - itemHeight - 40);
+
+                const randomX = Math.random() * maxX + 20;
+                const randomY = Math.random() * maxY + 20;
+
+                item.style.left = `${randomX}px`;
+                item.style.top = `${randomY}px`;
+
+                // 淡入動畫
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.8s ease';
+                    item.style.opacity = '1';
+                }, index * 50);
+            });
+        }
+
+        // ===== 抽選邏輯 =====
+        function startSelection() {
+            if (state.isSelecting) return;
+
+            let availableStudents = state.repeatEnabled 
+                ? currentClassData 
+                : currentClassData.filter(s => !state.selectedStudents.has(s.seat));
+
+            if (availableStudents.length === 0) {
+                alert('所有學生都已經被選過了！請重置狀態。');
+                return;
+            }
+
+            state.isSelecting = true;
+            const button = document.getElementById('selectButton');
+            button.disabled = true;
+            button.textContent = '⚙️ 選擇中... ⚙️';
+
+            // 閃動效果
+            const allItems = document.querySelectorAll('.student-cloud-item');
+            allItems.forEach(item => item.classList.add('flash'));
+
+            // 快速切換顯示
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                const randomStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+                updateResultDisplay(randomStudent, true);
+                flashCount++;
+
+                if (flashCount >= 20) {
+                    clearInterval(flashInterval);
+                    finalizeSelection(availableStudents);
+                }
+            }, 100);
+        }
+
+        function finalizeSelection(availableStudents) {
+            const finalStudent = availableStudents[Math.floor(Math.random() * availableStudents.length)];
+            
+            // 移除閃動
+            document.querySelectorAll('.student-cloud-item').forEach(item => {
+                item.classList.remove('flash', 'highlighted');
+            });
+
+            // 高亮顯示
+            const selectedItem = document.getElementById(`student-${finalStudent.seat}`);
+            if (selectedItem) {
+                selectedItem.classList.add('selected');
+            }
+
+            // 更新結果
+            updateResultDisplay(finalStudent, false);
+
+            // 記錄已選
+            if (!state.repeatEnabled) {
+                state.selectedStudents.add(finalStudent.seat);
+            }
+
+            updateStatistics();
+
+            // 恢復按鈕
+            setTimeout(() => {
+                state.isSelecting = false;
+                const button = document.getElementById('selectButton');
+                button.disabled = false;
+                button.textContent = '⚙️ 開始選人 ⚙️';
+            }, 1000);
+        }
+
+        function updateResultDisplay(student, isFlashing) {
+            const resultElement = document.getElementById('resultDisplay');
+            if (!resultElement) return;
+
+            if (isFlashing) {
+                resultElement.innerHTML = `
+                    <span class="seat">${student.seat}</span>
+                    <span class="name" style="opacity: 0.6;">${student.name}</span>
+                `;
+            } else {
+                resultElement.innerHTML = `
+                    <span class="seat">${student.seat}</span>
+                    <span class="name">${student.name}</span>
+                `;
+            }
+        }
+
+        function updateStatistics() {
+            const totalElement = document.getElementById('totalStudents');
+            const selectedElement = document.getElementById('selectedCount');
+            const remainingElement = document.getElementById('remainingCount');
+
+            const totalCount = currentClassData.length;
+            const selectedCount = state.selectedStudents.size;
+            const remainingCount = state.repeatEnabled ? totalCount : (totalCount - selectedCount);
+
+            if (totalElement) totalElement.textContent = totalCount;
+            if (selectedElement) selectedElement.textContent = selectedCount;
+            if (remainingElement) remainingElement.textContent = remainingCount;
+        }
+
+        // ===== 開關控制 =====
+        function toggleAudio() {
+            const toggle = document.getElementById('audioToggle');
+            state.audioEnabled = !state.audioEnabled;
+            toggle.classList.toggle('active', state.audioEnabled);
+            console.log(`音效：${state.audioEnabled ? '開' : '關'}`);
+        }
+
+        function toggleRepeat() {
+            const toggle = document.getElementById('repeatToggle');
+            const label = document.getElementById('repeatLabel');
+            state.repeatEnabled = !state.repeatEnabled;
+            toggle.classList.toggle('active', state.repeatEnabled);
+            label.textContent = state.repeatEnabled ? '重复抽選（已開啟）' : '重复抽選（已關閉）';
+            updateStatistics();
+            console.log(`重复抽選：${state.repeatEnabled ? '開' : '關'}`);
         }
     </script>
 </body>
