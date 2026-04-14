@@ -11,7 +11,465 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
     
     <!-- 自定義樣式 -->
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/steampunk.css">
+    <style>
+        /* ===== 簡化版主頁樣式 ===== */
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .title-decoration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .gear-title {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, var(--steampunk-gold) 25%, var(--steampunk-copper) 45%, transparent 55%);
+            border: 4px solid var(--steampunk-gold);
+            border-radius: 50%;
+            position: relative;
+            animation: gear-rotate 20s linear infinite;
+        }
+
+        .gear-title::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: var(--steampunk-brown);
+            border-radius: 50%;
+        }
+
+        .steampunk-main-title {
+            font-family: var(--font-title);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--steampunk-gold);
+            text-shadow: 
+                3px 3px 0 var(--steampunk-copper),
+                6px 6px 0 rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.15em;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: var(--font-content);
+            font-size: 1.4rem;
+            color: var(--steampunk-bronze);
+            letter-spacing: 0.2em;
+            margin-top: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .deco-line {
+            width: 250px;
+            height: 6px;
+            margin: 2rem auto 0;
+            background: linear-gradient(to right, transparent, var(--steampunk-copper), var(--steampunk-gold), var(--steampunk-copper), transparent);
+            position: relative;
+            border-radius: 3px;
+        }
+
+        .deco-line::before,
+        .deco-line::after {
+            content: '◆';
+            position: absolute;
+            top: -12px;
+            color: var(--steampunk-gold);
+            font-size: 2rem;
+        }
+
+        .deco-line::before { left: -30px; }
+        .deco-line::after { right: -30px; }
+
+        /* 班級選擇區域 - 簡化版 */
+        .class-selection {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--steampunk-gold);
+            text-align: center;
+            margin-bottom: 4rem;
+            text-shadow: 2px 2px 0 var(--steampunk-copper);
+            letter-spacing: 0.1em;
+        }
+
+        /* 班級網格 - 卡片式設計 */
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            padding: 0 1rem;
+        }
+
+        /* 班級卡片 - 極簡設計 */
+        .class-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .class-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .class-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--steampunk-gold), var(--steampunk-copper), var(--steampunk-bronze));
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .class-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .card-content {
+            background: linear-gradient(135deg, var(--steampunk-dark), var(--steampunk-brown));
+            border: 3px solid var(--steampunk-copper);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                inset 0 0 30px rgba(184, 115, 51, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover .card-content {
+            border-color: var(--steampunk-gold);
+            box-shadow: 
+                0 12px 30px rgba(0, 0, 0, 0.5),
+                inset 0 0 40px rgba(184, 115, 51, 0.2);
+        }
+
+        .card-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .class-card:hover .card-content::before {
+            left: 100%;
+        }
+
+        .class-icon {
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .class-icon-gear {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--steampunk-gold) 30%, var(--steampunk-copper) 50%, transparent 60%);
+            border: 5px solid var(--steampunk-gold);
+            border-radius: 50%;
+            position: relative;
+            animation: gear-rotate 15s linear infinite;
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover .class-icon-gear {
+            animation-duration: 5s;
+            border-color: #ffd700;
+        }
+
+        .class-icon-gear::before {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            background: var(--steampunk-dark);
+            border-radius: 50%;
+        }
+
+        .class-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--steam-white);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .class-name {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--steampunk-bronze);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .class-card:hover .class-name {
+            color: var(--steampunk-gold);
+            text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+        }
+
+        /* 新增班級卡片 - 特殊樣式 */
+        .add-new-card .card-content {
+            background: linear-gradient(135deg, var(--steampunk-dark), var(--steampunk-brown));
+            border: 3px dashed var(--steampunk-copper);
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .add-new-card:hover .card-content {
+            opacity: 1;
+            border-style: solid;
+            border-color: var(--steampunk-gold);
+        }
+
+        .plus-icon {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--steampunk-gold);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .add-new-card .class-name {
+            font-size: 1.8rem;
+            color: var(--steampunk-bronze);
+        }
+
+        .add-new-card:hover .class-name {
+            color: var(--steampunk-gold);
+        }
+
+        /* ===== 刪除按鈕樣式 ===== */
+        .card-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 5;
+        }
+
+        .delete-button {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--steampunk-rust), #cc0000);
+            border: 2px solid var(--steampunk-gold);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .class-card:hover .delete-button {
+            opacity: 0.8;
+            transform: scale(1);
+        }
+
+        .delete-button:hover {
+            opacity: 1 !important;
+            background: linear-gradient(135deg, #ff0000, var(--steampunk-rust));
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* 底部裝飾 */
+        .bottom-decoration {
+            margin-top: 6rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--steampunk-copper);
+            text-align: center;
+        }
+
+        .steam-pipe {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .pipe-section {
+            width: 120px;
+            height: 35px;
+            background: linear-gradient(to bottom, var(--steampunk-copper), var(--steampunk-bronze));
+            border: 2px solid var(--steampunk-gold);
+            position: relative;
+        }
+
+        .pipe-section::before,
+        .pipe-section::after {
+            content: '';
+            position: absolute;
+            top: -7px;
+            width: 5px;
+            height: 50px;
+            background: var(--steampunk-gold);
+        }
+
+        .pipe-section::before { left: 15px; }
+        .pipe-section::after { right: 15px; }
+
+        .pipe-valve {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, var(--steampunk-gold) 35%, var(--steampunk-copper));
+            border: 4px solid var(--steampunk-bronze);
+            border-radius: 50%;
+            position: relative;
+            margin: 0 -5px;
+        }
+
+        .pipe-valve::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 25px;
+            background: var(--steampunk-dark);
+        }
+
+        .delete-button {
+            position: absolute !important;
+            top: -10px !important;
+            right: -10px !important;
+            z-index: 10 !important;
+            width: 40px !important;
+            height: 40px !important;
+            background: linear-gradient(135deg, var(--steampunk-rust), #ff4444) !important;
+            border: 3px solid var(--steampunk-gold) !important;
+            border-radius: 50% !important;
+            color: white !important;
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            opacity: 0 !important;
+            transition: all 0.3s ease !important;
+            pointer-events: auto !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .class-card:hover .delete-button {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        .delete-button:hover {
+            background: linear-gradient(135deg, #ff0000, var(--steampunk-rust)) !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6) !important;
+        }
+            text-align: center;
+            font-family: var(--font-content);
+            font-size: 0.9rem;
+            color: var(--steam-gray);
+            letter-spacing: 0.05em;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 2rem 1rem;
+            }
+
+            .steampunk-main-title {
+                font-size: 2.5rem;
+            }
+
+            .title-decoration {
+                gap: 1.5rem;
+            }
+
+            .gear-title {
+                width: 60px;
+                height: 60px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .class-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 0;
+            }
+
+            .class-icon-gear {
+                width: 100px;
+                height: 100px;
+            }
+
+            .class-number {
+                font-size: 2rem;
+            }
+
+            .class-name {
+                font-size: 1.8rem;
+            }
+
+            .card-content {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 背景動畫 -->
@@ -47,14 +505,13 @@
                 <a href="classes/class-1.html" class="class-card">
                     <div class="card-content">
                         <div class="class-icon">
-                            <div class="gear-small"></div>
-                            <span class="class-number">01</span>
+                            <div class="class-icon-gear">
+                                <span class="class-number">01</span>
+                            </div>
                         </div>
                         <h3 class="class-name">一年一班</h3>
-                        <p class="class-info">35 位學生</p>
-                        <div class="card-decoration">
-                            <div class="rivet"></div>
-                            <div class="rivet"></div>
+                        <div class="card-actions">
+                            <button class="delete-button" onclick="deleteClass(event, 'class-1')">×</button>
                         </div>
                     </div>
                 </a>
@@ -63,14 +520,13 @@
                 <a href="classes/class-2.html" class="class-card">
                     <div class="card-content">
                         <div class="class-icon">
-                            <div class="gear-small"></div>
-                            <span class="class-number">02</span>
+                            <div class="class-icon-gear">
+                                <span class="class-number">02</span>
+                            </div>
                         </div>
                         <h3 class="class-name">二年三班</h3>
-                        <p class="class-info">35 位學生</p>
-                        <div class="card-decoration">
-                            <div class="rivet"></div>
-                            <div class="rivet"></div>
+                        <div class="card-actions">
+                            <button class="delete-button" onclick="deleteClass(event, 'class-2')">×</button>
                         </div>
                     </div>
                 </a>
@@ -82,7 +538,6 @@
                             <span class="plus-icon">+</span>
                         </div>
                         <h3 class="class-name">新增班級</h3>
-                        <p class="class-info">點擊建立新班級</p>
                     </div>
                 </div>
             </div>

@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一年一班 - 蒸氣龐克選人系統</title>
+    <title>銝撟港???- ?豢除樴??訾犖蝟餌絞</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
     
-    <!-- 樣式 -->
+    <!-- 璅?? -->
     <link rel="stylesheet" href="../css/steampunk.css">
     <style>
-        /* ===== 班級頁面專用樣式 ===== */
+        /* ===== ?剔??撠璅?? ===== */
         :root {
             --selection-glow: #ffd700;
         }
@@ -24,7 +24,7 @@
             padding: 1rem;
         }
 
-        /* 頁面標題 */
+        /* ?璅? */
         .class-header {
             text-align: center;
             padding: 1.5rem 0;
@@ -69,7 +69,7 @@
             letter-spacing: 0.1em;
         }
 
-        /* 主內容區域 */
+        /* 銝餃摰孵???*/
         .main-content {
             display: grid;
             grid-template-columns: 1fr 350px;
@@ -77,7 +77,7 @@
             min-height: 600px;
         }
 
-        /* 文字雲區域 */
+        /* ???脣???*/
         .text-cloud-container {
             background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
             border: 3px solid var(--steampunk-copper);
@@ -107,7 +107,7 @@
             overflow: hidden;
         }
 
-        /* 單個學生文字雲元素 */
+        /* ?桀飛??摮?? */
         .student-cloud-item {
             position: absolute;
             padding: 0.8rem 1.2rem;
@@ -162,7 +162,7 @@
             color: var(--steam-white);
         }
 
-        /* 右側控制面板 */
+        /* ?喳?批?Ｘ */
         .control-panel {
             background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
             border: 3px solid var(--steampunk-copper);
@@ -182,7 +182,7 @@
             border-bottom: 2px solid var(--steampunk-copper);
         }
 
-        /* 選人按鈕 */
+        /* ?訾犖?? */
         .select-button {
             width: 100%;
             padding: 1.5rem 2rem;
@@ -216,7 +216,7 @@
             transform: none;
         }
 
-        /* 結果顯示區域 */
+        /* 蝯?憿舐內???*/
         .result-area {
             background: rgba(0,0,0,0.3);
             border: 2px solid var(--steampunk-copper);
@@ -260,7 +260,7 @@
             font-weight: 700;
         }
 
-        /* 統計資訊 */
+        /* 蝯梯?鞈? */
         .stats-area {
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--steampunk-copper);
@@ -285,7 +285,7 @@
             font-weight: 600;
         }
 
-        /* 音效控制 */
+        /* ?單??批 */
         .audio-controls {
             margin-top: 1.5rem;
             padding-top: 1rem;
@@ -332,7 +332,7 @@
             transform: translateX(25px);
         }
 
-        /* 響應式設計 */
+        /* ?踵?撘身閮?*/
         @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -387,7 +387,7 @@
             }
         }
 
-        /* 載入動畫 */
+        /* 頛? */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -432,73 +432,73 @@
     </style>
 </head>
 <body>
-    <!-- 載入畫面 -->
+    <!-- 頛?恍 -->
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-text">系統初始化中...</div>
+        <div class="loading-text">蝟餌絞???葉...</div>
         <div class="loading-gear"></div>
     </div>
 
-    <!-- 主容器 -->
+    <!-- 銝餃捆??-->
     <div class="class-page-container">
-        <!-- 頁面標題 -->
+        <!-- ?璅? -->
         <header class="class-header">
-            <a href="../index.html" class="back-button">← 返回主頁</a>
-            <h1 class="class-title">一年一班</h1>
+            <a href="../index.html" class="back-button">??餈?銝駁?</a>
+            <h1 class="class-title">銝撟港???/h1>
             <p class="class-subtitle">Class 1 - Steampunk Selector</p>
         </header>
 
-        <!-- 主內容區域 -->
+        <!-- 銝餃摰孵???-->
         <div class="main-content">
-            <!-- 文字雲區域 -->
+            <!-- ???脣???-->
             <div class="text-cloud-container">
                 <div class="text-cloud-area" id="textCloudArea">
-                    <!-- 學生文字雲將由 JavaScript 動態生成 -->
+                    <!-- 摮貊????脣???JavaScript ???? -->
                 </div>
             </div>
 
-            <!-- 控制面板 -->
+            <!-- ?批?Ｘ -->
             <aside class="control-panel">
-                <h2 class="panel-title">控制面板</h2>
+                <h2 class="panel-title">?批?Ｘ</h2>
                 
-                <!-- 選人按鈕 -->
+                <!-- ?訾犖?? -->
                 <button class="select-button" id="selectButton" onclick="startSelection()">
-                    ⚙️ 開始選人 ⚙️
+                    ?? ???訾犖 ??
                 </button>
 
-                <!-- 結果顯示 -->
+                <!-- 蝯?憿舐內 -->
                 <div class="result-area">
-                    <div class="result-label">選中學生</div>
+                    <div class="result-label">?訾葉摮貊?</div>
                     <div class="result-display" id="resultDisplay">
-                        <span style="color: var(--steam-gray); font-size: 1.2rem;">等待選擇...</span>
+                        <span style="color: var(--steam-gray); font-size: 1.2rem;">蝑??豢?...</span>
                     </div>
                 </div>
 
-                <!-- 統計資訊 -->
+                <!-- 蝯梯?鞈? -->
                 <div class="stats-area">
                     <div class="stat-item">
-                        <span class="stat-label">班級人數：</span>
+                        <span class="stat-label">?剔?鈭箸嚗?/span>
                         <span class="stat-value" id="totalStudents">35</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">已被選中：</span>
+                        <span class="stat-label">撌脰◤?訾葉嚗?/span>
                         <span class="stat-value" id="selectedCount">0</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">剩余人數：</span>
+                        <span class="stat-label">?拐?鈭箸嚗?/span>
                         <span class="stat-value" id="remainingCount">35</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">選人狀態：</span>
-                        <span class="stat-value" id="selectionStatus">待命中</span>
+                        <span class="stat-label">?訾犖???</span>
+                        <span class="stat-value" id="selectionStatus">敺銝?/span>
                     </div>
                 </div>
 
-                <!-- 音效控制 -->
+                <!-- ?單??批 -->
                 <div class="audio-controls">
                     <div class="audio-toggle">
-                        <span>音效開關</span>
+                        <span>?單???</span>
                         <div class="toggle-switch active" id="audioToggle" onclick="toggleAudio()"></div>
-                    </div>
+                    </div>\n</div>\n\n<!-- 重复抽选控制 -->\n<div class='selection-controls'>\n    <div class='selection-toggle'>\n        <span>重复抽选</span>\n        <div class='toggle-switch' id='repeatToggle' onclick='toggleRepeat()'></div>\n    </div>\n</div>\n\n</div>
                 </div>
             </aside>
         </div>
@@ -508,67 +508,63 @@
     <script src="../js/text-cloud.js"></script>
     <script src="../js/student-picker.js"></script>
     <script>
-        // 班級專屬數據 - 一年一班學生
-        const currentClassData = [
-            { seat: '01', name: '王小明' },
-            { seat: '02', name: '李小華' },
-            { seat: '03', name: '張大偉' },
-            { seat: '04', name: '陳小美' },
-            { seat: '05', name: '劉小強' },
-            { seat: '06', name: '林雅惠' },
-            { seat: '07', name: '黃志豪' },
-            { seat: '08', name: '吳佳琪' },
-            { seat: '09', name: '蔡宗翰' },
-            { seat: '10', name: '楊詩涵' },
-            { seat: '11', name: '許建宏' },
-            { seat: '12', name: '鄭雅玲' },
-            { seat: '13', name: '謝承翰' },
-            { seat: '14', name: '周曉婷' },
-            { seat: '15', name: '施俊傑' },
-            { seat: '16', name: '曾郁珊' },
-            { seat: '17', name: '蘇冠宇' },
-            { seat: '18', name: '葉靜宜' },
-            { seat: '19', name: '江志偉' },
-            { seat: '20', name: '何淑芬' },
-            { seat: '21', name: '廖威廷' },
-            { seat: '22', name: '鐘佳蓉' },
-            { seat: '23', name: '邱信義' },
-            { seat: '24', name: '郭雅雯' },
-            { seat: '25', name: '簡明豪' },
-            { seat: '26', name: '袁美玲' },
-            { seat: '27', name: '林凱文' },
-            { seat: '28', name: '翁雅琪' },
-            { seat: '29', name: '溫家豪' },
-            { seat: '30', name: '余雅婷' },
-            { seat: '31', name: '葉俊宏' },
-            { seat: '32', name: '游雅慧' },
-            { seat: '33', name: '李智偉' },
-            { seat: '34', name: '陳雅萍' },
-            { seat: '35', name: '張家豪' }
+        // ?剔?撠惇?豢? - 銝撟港??剖飛??        const currentClassData = [
+            { seat: '01', name: '???? },
+            { seat: '02', name: '???? },
+            { seat: '03', name: '撘萄之?? },
+            { seat: '04', name: '?喳?蝢? },
+            { seat: '05', name: '??撘? },
+            { seat: '06', name: '???? },
+            { seat: '07', name: '暺?鞊? },
+            { seat: '08', name: '?喃蔔?? },
+            { seat: '09', name: '?∪?蝧? },
+            { seat: '10', name: '璆帘瘨? },
+            { seat: '11', name: '閮勗遣摰? },
+            { seat: '12', name: '?剝??? },
+            { seat: '13', name: '雓蝧? },
+            { seat: '14', name: '?冽?憍? },
+            { seat: '15', name: '?賭??? },
+            { seat: '16', name: '?暸??? },
+            { seat: '17', name: '??摰? },
+            { seat: '18', name: '??摰? },
+            { seat: '19', name: '瘙??? },
+            { seat: '20', name: '雿??? },
+            { seat: '21', name: '撱?撱? },
+            { seat: '22', name: '?蔔?? },
+            { seat: '23', name: '?曹縑蝢? },
+            { seat: '24', name: '?剝??? },
+            { seat: '25', name: '蝪⊥?鞊? },
+            { seat: '26', name: '鋡??? },
+            { seat: '27', name: '??? },
+            { seat: '28', name: '蝧??? },
+            { seat: '29', name: '皞怠振鞊? },
+            { seat: '30', name: '雿?憍? },
+            { seat: '31', name: '??摰? },
+            { seat: '32', name: '皜賊??? },
+            { seat: '33', name: '??? },
+            { seat: '34', name: '?喲??? },
+            { seat: '35', name: '撘萄振鞊? }
         ];
 
-        // 頁面初始化
-        document.addEventListener('DOMContentLoaded', function() {
+        // ?????        document.addEventListener('DOMContentLoaded', function() {
             initializeClassPage();
         });
 
         function initializeClassPage() {
-            // 隱藏載入畫面
+            // ?梯?頛?恍
             setTimeout(() => {
                 document.getElementById('loadingOverlay').classList.add('fade-out');
             }, 1000);
 
-            // 初始化文字雲
+            // ????摮
             const textCloudArea = document.getElementById('textCloudArea');
             initializeTextCloud(textCloudArea, currentClassData);
 
-            // 初始化選人系統
-            initializeStudentPicker(currentClassData);
+            // ???鈭箇頂蝯?            initializeStudentPicker(currentClassData);
 
-            // 初始化音效
-            initializeAudio();
+            // ?????            initializeAudio();
 
-            console.log('一年一班頁面初始化完成 🎓⚙️');
+            console.log('銝撟港??剝??Ｗ?憪?摰? ????');
         }
     </script>
 </body>

@@ -106,12 +106,43 @@ function playHoverSound() {
 
 // 顯示新增班級彈窗
 function showAddClassModal() {
-  // 簡單的提示，實際可做更好看的彈窗
-  const className = prompt('請輸入班級名稱：');
-  if (className) {
-    const studentCount = prompt('請輸入班級人數（預設35人）：') || '35';
-    alert(`已記錄新班級：${className}\n人數：${studentCount}人\n\n請手動複製 class-template.html 並修改學生資料。`);
-  }
+    // 簡單的提示，實際可做更好看的彈窗
+    const className = prompt('請輸入班級名稱：');
+    if (className) {
+        const studentCount = prompt('請輸入班級人數（預設35人）：') || '35';
+        alert(`已記錄新班級：${className}\n人數：${studentCount}人\n\n請手動複製 class-template.html 並修改學生資料。`);
+    }
+}
+
+// 刪除班級功能
+function deleteClass(event, classId) {
+    // 阻止事件冒泡，避免觸發卡片點擊
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // 確認刪除
+    const className = event.currentTarget.closest('.class-card').querySelector('.class-name').textContent;
+    if (confirm(`確定要刪除 ${className} 嗎？\n\n注意：此操作不可恢復！`)) {
+        // 刪除該卡片元素
+        const cardElement = event.currentTarget.closest('.class-card');
+        
+        // 添加刪除動畫
+        cardElement.style.transform = 'scale(0.8) rotate(5deg)';
+        cardElement.style.opacity = '0';
+        
+        setTimeout(() => {
+            cardElement.remove();
+            console.log(`已刪除班級: ${className} (${classId})`);
+            
+            // 檢查是否還有班級卡片（除了新增班級卡片）
+            const remainingCards = document.querySelectorAll('.class-card:not(.add-new-card)');
+            if (remainingCards.length === 0) {
+                alert('所有班級已刪除！\n\n請點擊「新增班級」建立新班級。');
+            }
+        }, 300);
+    }
+    
+    return false;
 }
 
 // 版本資訊
