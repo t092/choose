@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蒸氣龐克選人系統</title>
+    
+    <!-- Google Fonts - 蒸氣龐克字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- 自定義樣式 -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- 背景動畫 -->
+    <div class="bg-animation">
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="gear-bg" id="gear1"></div>
+        <div class="gear-bg" id="gear2"></div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 標題區域 -->
+        <header class="title-section">
+            <div class="title-decoration">
+                <div class="gear-title"></div>
+                <h1 class="steampunk-main-title">蒸氣龐克選人系統</h1>
+                <div class="gear-title"></div>
+            </div>
+            <p class="subtitle">Steampunk Student Selector</p>
+            <div class="deco-line"></div>
+        </header>
+
+        <!-- 班級選擇區域 -->
+        <section class="class-selection">
+            <h2 class="section-title">選擇班級</h2>
+            
+            <div class="class-grid">
+                <!-- 班級卡片 1 -->
+                <a href="classes/class-1.html" class="class-card">
+                    <div class="card-content">
+                        <div class="class-icon">
+                            <div class="gear-small"></div>
+                            <span class="class-number">01</span>
+                        </div>
+                        <h3 class="class-name">一年一班</h3>
+                        <p class="class-info">35 位學生</p>
+                        <div class="card-decoration">
+                            <div class="rivet"></div>
+                            <div class="rivet"></div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 班級卡片 2 -->
+                <a href="classes/class-2.html" class="class-card">
+                    <div class="card-content">
+                        <div class="class-icon">
+                            <div class="gear-small"></div>
+                            <span class="class-number">02</span>
+                        </div>
+                        <h3 class="class-name">二年三班</h3>
+                        <p class="class-info">35 位學生</p>
+                        <div class="card-decoration">
+                            <div class="rivet"></div>
+                            <div class="rivet"></div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 新增班級按鈕 -->
+                <div class="class-card add-new-card">
+                    <div class="card-content">
+                        <div class="class-icon">
+                            <span class="plus-icon">+</span>
+                        </div>
+                        <h3 class="class-name">新增班級</h3>
+                        <p class="class-info">點擊建立新班級</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部裝飾 -->
+        <footer class="bottom-decoration">
+            <div class="steam-pipe">
+                <div class="pipe-section"></div>
+                <div class="pipe-valve"></div>
+                <div class="pipe-section"></div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Steampunk Selector</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 腳本 -->
+    <script src="js/main.js"></script>
+</body>
+</html>

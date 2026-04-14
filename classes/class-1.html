@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一年一班 - 蒸氣龐克選人系統</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- 樣式 -->
+    <link rel="stylesheet" href="../css/steampunk.css">
+    <style>
+        /* ===== 班級頁面專用樣式 ===== */
+        :root {
+            --selection-glow: #ffd700;
+        }
+
+        .class-page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* 頁面標題 */
+        .class-header {
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--steampunk-bronze), var(--steampunk-copper));
+            border: 2px solid var(--steampunk-gold);
+            border-radius: 25px;
+            color: var(--steam-white);
+            text-decoration: none;
+            font-family: var(--font-content);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, var(--steampunk-gold), var(--steampunk-copper));
+        }
+
+        .class-title {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            color: var(--steampunk-gold);
+            text-shadow: 2px 2px 0 var(--steampunk-copper), 4px 4px 0 rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .class-subtitle {
+            font-size: 1.2rem;
+            color: var(--steampunk-bronze);
+            letter-spacing: 0.1em;
+        }
+
+        /* 主內容區域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        /* 文字雲區域 */
+        .text-cloud-container {
+            background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
+            border: 3px solid var(--steampunk-copper);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(184, 115, 51, 0.2);
+            min-height: 500px;
+        }
+
+        .text-cloud-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 70%, rgba(184, 115, 51, 0.1));
+            pointer-events: none;
+        }
+
+        .text-cloud-area {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        /* 單個學生文字雲元素 */
+        .student-cloud-item {
+            position: absolute;
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, var(--steampunk-bronze), var(--steampunk-copper));
+            border: 2px solid var(--steampunk-gold);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .student-cloud-item:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .student-cloud-item.highlighted {
+            background: linear-gradient(135deg, var(--steampunk-gold), #ffd700);
+            border-color: #fff;
+            transform: scale(1.3);
+            z-index: 20;
+            box-shadow: 0 0 20px var(--selection-glow);
+        }
+
+        .student-cloud-item.selected {
+            background: linear-gradient(135deg, #ffd700, var(--steampunk-gold));
+            border-color: #fff;
+            transform: scale(1.5);
+            z-index: 30;
+            animation: selection-glow 1s ease;
+        }
+
+        @keyframes selection-glow {
+            0%, 100% { box-shadow: 0 0 30px var(--selection-glow); }
+            50% { box-shadow: 0 0 50px var(--selection-growth), 0 0 70px var(--selection-glow); }
+        }
+
+        .seat-number {
+            font-family: var(--font-content);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--steampunk-dark);
+            margin-right: 0.5rem;
+        }
+
+        .student-name {
+            font-family: var(--font-zh);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--steam-white);
+        }
+
+        /* 右側控制面板 */
+        .control-panel {
+            background: linear-gradient(135deg, var(--steampunk-dark), rgba(58, 35, 23, 0.8));
+            border: 3px solid var(--steampunk-copper);
+            border-radius: 20px;
+            padding: 2rem;
+            height: fit-content;
+            box-shadow: inset 0 0 20px rgba(184, 115, 51, 0.2);
+        }
+
+        .panel-title {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            color: var(--steampunk-gold);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--steampunk-copper);
+        }
+
+        /* 選人按鈕 */
+        .select-button {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--steampunk-gold), var(--steampunk-copper));
+            border: 3px solid var(--steampunk-bronze);
+            border-radius: 35px;
+            color: var(--steampunk-dark);
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            letter-spacing: 0.1em;
+        }
+
+        .select-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #ffd700, var(--steampunk-gold));
+        }
+
+        .select-button:active {
+            transform: translateY(-1px);
+        }
+
+        .select-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 結果顯示區域 */
+        .result-area {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--steampunk-copper);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-label {
+            font-family: var(--font-content);
+            font-size: 1rem;
+            color: var(--steam-gray);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .result-display {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--steampunk-gold);
+            text-align: center;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-display .seat {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            color: var(--steampunk-copper);
+        }
+
+        .result-display .name {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        /* 統計資訊 */
+        .stats-area {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--steampunk-copper);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-family: var(--font-content);
+            font-size: 0.95rem;
+        }
+
+        .stat-label {
+            color: var(--steampunk-bronze);
+        }
+
+        .stat-value {
+            color: var(--steam-white);
+            font-weight: 600;
+        }
+
+        /* 音效控制 */
+        .audio-controls {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--steampunk-copper);
+        }
+
+        .audio-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: var(--font-content);
+            font-size: 0.9rem;
+            color: var(--steam-gray);
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background: var(--steampunk-dark);
+            border: 2px solid var(--steampunk-copper);
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--steampunk-gold);
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 17px;
+            height: 17px;
+            background: var(--steam-white);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(25px);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .class-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .class-page-container {
+                padding: 0.5rem;
+            }
+
+            .class-title {
+                font-size: 1.8rem;
+            }
+
+            .text-cloud-container {
+                padding: 1rem;
+            }
+
+            .text-cloud-area {
+                height: 350px;
+            }
+
+            .control-panel {
+                padding: 1.5rem;
+            }
+
+            .student-cloud-item {
+                padding: 0.6rem 1rem;
+            }
+
+            .student-name {
+                font-size: 1.2rem;
+            }
+
+            .select-button {
+                font-size: 1.2rem;
+                padding: 1.2rem 1.5rem;
+            }
+
+            .back-button {
+                position: relative;
+                left: 0;
+                top: 0;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+        }
+
+        /* 載入動畫 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 18, 12, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--steampunk-gold);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .loading-gear {
+            width: 100px;
+            height: 100px;
+            border: 5px solid var(--steampunk-copper);
+            border-top: 5px solid var(--steampunk-gold);
+            border-radius: 50%;
+            animation: loading-rotate 1s linear infinite;
+        }
+
+        @keyframes loading-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 載入畫面 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">系統初始化中...</div>
+        <div class="loading-gear"></div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="class-page-container">
+        <!-- 頁面標題 -->
+        <header class="class-header">
+            <a href="../index.html" class="back-button">← 返回主頁</a>
+            <h1 class="class-title">一年一班</h1>
+            <p class="class-subtitle">Class 1 - Steampunk Selector</p>
+        </header>
+
+        <!-- 主內容區域 -->
+        <div class="main-content">
+            <!-- 文字雲區域 -->
+            <div class="text-cloud-container">
+                <div class="text-cloud-area" id="textCloudArea">
+                    <!-- 學生文字雲將由 JavaScript 動態生成 -->
+                </div>
+            </div>
+
+            <!-- 控制面板 -->
+            <aside class="control-panel">
+                <h2 class="panel-title">控制面板</h2>
+                
+                <!-- 選人按鈕 -->
+                <button class="select-button" id="selectButton" onclick="startSelection()">
+                    ⚙️ 開始選人 ⚙️
+                </button>
+
+                <!-- 結果顯示 -->
+                <div class="result-area">
+                    <div class="result-label">選中學生</div>
+                    <div class="result-display" id="resultDisplay">
+                        <span style="color: var(--steam-gray); font-size: 1.2rem;">等待選擇...</span>
+                    </div>
+                </div>
+
+                <!-- 統計資訊 -->
+                <div class="stats-area">
+                    <div class="stat-item">
+                        <span class="stat-label">班級人數：</span>
+                        <span class="stat-value" id="totalStudents">35</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">已被選中：</span>
+                        <span class="stat-value" id="selectedCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">剩余人數：</span>
+                        <span class="stat-value" id="remainingCount">35</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">選人狀態：</span>
+                        <span class="stat-value" id="selectionStatus">待命中</span>
+                    </div>
+                </div>
+
+                <!-- 音效控制 -->
+                <div class="audio-controls">
+                    <div class="audio-toggle">
+                        <span>音效開關</span>
+                        <div class="toggle-switch active" id="audioToggle" onclick="toggleAudio()"></div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/text-cloud.js"></script>
+    <script src="../js/student-picker.js"></script>
+    <script>
+        // 班級專屬數據 - 一年一班學生
+        const currentClassData = [
+            { seat: '01', name: '王小明' },
+            { seat: '02', name: '李小華' },
+            { seat: '03', name: '張大偉' },
+            { seat: '04', name: '陳小美' },
+            { seat: '05', name: '劉小強' },
+            { seat: '06', name: '林雅惠' },
+            { seat: '07', name: '黃志豪' },
+            { seat: '08', name: '吳佳琪' },
+            { seat: '09', name: '蔡宗翰' },
+            { seat: '10', name: '楊詩涵' },
+            { seat: '11', name: '許建宏' },
+            { seat: '12', name: '鄭雅玲' },
+            { seat: '13', name: '謝承翰' },
+            { seat: '14', name: '周曉婷' },
+            { seat: '15', name: '施俊傑' },
+            { seat: '16', name: '曾郁珊' },
+            { seat: '17', name: '蘇冠宇' },
+            { seat: '18', name: '葉靜宜' },
+            { seat: '19', name: '江志偉' },
+            { seat: '20', name: '何淑芬' },
+            { seat: '21', name: '廖威廷' },
+            { seat: '22', name: '鐘佳蓉' },
+            { seat: '23', name: '邱信義' },
+            { seat: '24', name: '郭雅雯' },
+            { seat: '25', name: '簡明豪' },
+            { seat: '26', name: '袁美玲' },
+            { seat: '27', name: '林凱文' },
+            { seat: '28', name: '翁雅琪' },
+            { seat: '29', name: '溫家豪' },
+            { seat: '30', name: '余雅婷' },
+            { seat: '31', name: '葉俊宏' },
+            { seat: '32', name: '游雅慧' },
+            { seat: '33', name: '李智偉' },
+            { seat: '34', name: '陳雅萍' },
+            { seat: '35', name: '張家豪' }
+        ];
+
+        // 頁面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeClassPage();
+        });
+
+        function initializeClassPage() {
+            // 隱藏載入畫面
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('fade-out');
+            }, 1000);
+
+            // 初始化文字雲
+            const textCloudArea = document.getElementById('textCloudArea');
+            initializeTextCloud(textCloudArea, currentClassData);
+
+            // 初始化選人系統
+            initializeStudentPicker(currentClassData);
+
+            // 初始化音效
+            initializeAudio();
+
+            console.log('一年一班頁面初始化完成 🎓⚙️');
+        }
+    </script>
+</body>
+</html>
