@@ -12,6 +12,7 @@
     
     <!-- 樣式 -->
     <link rel="stylesheet" href="../css/steampunk.css">
+    <link rel="stylesheet" href="../css/student-manager.css">
     <style>
         /* ===== 班級頁面專用樣式 ===== */
         :root {
@@ -493,6 +494,11 @@
                     </div>
                 </div>
 
+                <!-- 管理按鈕 -->
+                <button class="select-button" id="manageButton" onclick="openManager()" style="margin-top: 1rem; background: linear-gradient(135deg, #4CAF50, #45a049);">
+                    📋 管理名單
+                </button>
+
                 <!-- 音效控制 -->
                 <div class="audio-controls">
                     <div class="audio-toggle">
@@ -505,49 +511,29 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="../js/student-manager.js"></script>
     <script src="../js/text-cloud.js"></script>
     <script src="../js/student-picker.js"></script>
     <script>
         // 班級專屬數據 - 一年一班學生
-        const currentClassData = [
-            { seat: '01', name: '陳彥廷' },
-            { seat: '02', name: '林宜蓁' },
-            { seat: '03', name: '黃俊凱' },
-            { seat: '04', name: '張雅筑' },
-            { seat: '05', name: '李政宇' },
-            { seat: '06', name: '王怡君' },
-            { seat: '07', name: '劉承翰' },
-            { seat: '08', name: '吳怡萱' },
-            { seat: '09', name: '林建宏' },
-            { seat: '10', name: '蔡佩珊' },
-            { seat: '11', name: '何俊宏' },
-            { seat: '12', name: '郭怡君' },
-            { seat: '13', name: '高志豪' },
-            { seat: '14', name: '鄭雅婷' },
-            { seat: '15', name: '蘇冠廷' },
-            { seat: '16', name: '曾沛慈' },
-            { seat: '17', name: '謝志偉' },
-            { seat: '18', name: '簡雅婷' },
-            { seat: '19', name: '賴冠宇' },
-            { seat: '20', name: '邱雅雯' },
-            { seat: '21', name: '尹志強' },
-            { seat: '22', name: '汪怡伶' },
-            { seat: '23', name: '范家豪' },
-            { seat: '24', name: '朱雅琪' },
-            { seat: '25', name: '蕭俊翰' },
-            { seat: '26', name: '徐郁婷' },
-            { seat: '27', name: '洪志宏' },
-            { seat: '28', name: '方郁馨' },
-            { seat: '29', name: '紀志偉' },
-            { seat: '30', name: '葉純如' },
-            { seat: '31', name: '唐俊軒' },
-            { seat: '32', name: '黃雅琳' },
-            { seat: '33', name: '羅志偉' },
-            { seat: '34', name: '楊雅玲' },
-            { seat: '35', name: '廖俊哲' }
+        const defaultClass1Data = [
+            { seat: '01', name: '王小明' }, { seat: '02', name: '李小華' }, { seat: '03', name: '張大偉' },
+            { seat: '04', name: '陳小美' }, { seat: '05', name: '劉小強' }, { seat: '06', name: '林雅惠' },
+            { seat: '07', name: '黃志豪' }, { seat: '08', name: '吳佳琪' }, { seat: '09', name: '蔡宗翰' },
+            { seat: '10', name: '楊詩涵' }, { seat: '11', name: '許建宏' }, { seat: '12', name: '鄭雅玲' },
+            { seat: '13', name: '謝承翰' }, { seat: '14', name: '周曉婷' }, { seat: '15', name: '施俊傑' },
+            { seat: '16', name: '曾郁珊' }, { seat: '17', name: '蘇冠宇' }, { seat: '18', name: '葉靜宜' },
+            { seat: '19', name: '江志偉' }, { seat: '20', name: '何淑芬' }, { seat: '21', name: '廖威廷' },
+            { seat: '22', name: '鐘佳蓉' }, { seat: '23', name: '邱信義' }, { seat: '24', name: '郭雅雯' },
+            { seat: '25', name: '簡明豪' }, { seat: '26', name: '袁美玲' }, { seat: '27', name: '林凱文' },
+            { seat: '28', name: '翁雅琪' }, { seat: '29', name: '溫家豪' }, { seat: '30', name: '余雅婷' },
+            { seat: '31', name: '葉俊宏' }, { seat: '32', name: '游雅慧' }, { seat: '33', name: '李智偉' },
+            { seat: '34', name: '陳雅萍' }, { seat: '35', name: '張家豪' }
         ];
 
         // 頁面初始化
+        let currentClassData = [];
+
         document.addEventListener('DOMContentLoaded', function() {
             initializeClassPage();
         });
@@ -557,6 +543,10 @@
             setTimeout(() => {
                 document.getElementById('loadingOverlay').classList.add('fade-out');
             }, 1000);
+
+            // 獲取學生資料（優先使用 localStorage）
+            const classData = getStudentData('class-1', '一年一班', defaultClass1Data);
+            currentClassData = classData.students;
 
             // 初始化文字雲
             const textCloudArea = document.getElementById('textCloudArea');
@@ -569,6 +559,15 @@
             initializeAudio();
 
             console.log('一年一班頁面初始化完成 🎓⚙️');
+        }
+
+        // 開啟管理員介面
+        function openManager() {
+            openStudentManager('class-1', '一年一班', currentClassData, (students) => {
+                // 儲存後的回調
+                currentClassData = students;
+                location.reload(); // 重新載入以套用變更
+            });
         }
     </script>
 </body>

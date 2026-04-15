@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一年 12 班 - 蒸氣龐克選人系統</title>
+    <title>一年 7 班 - 蒸氣龐克選人系統</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,7 @@
     
     <!-- 樣式 -->
     <link rel="stylesheet" href="../css/steampunk.css">
+    <link rel="stylesheet" href="../css/student-manager.css">
     <style>
         /* ===== 班級頁面專用樣式 ===== */
         :root {
@@ -443,8 +444,8 @@
         <!-- 頁面標題 -->
         <header class="class-header">
             <a href="../index.html" class="back-button">← 返回主頁</a>
-            <h1 class="class-title">一年 12 班</h1>
-            <p class="class-subtitle">Class 12 - Steampunk Selector</p>
+            <h1 class="class-title">一年 7 班</h1>
+            <p class="class-subtitle">Class 7 - Steampunk Selector</p>
         </header>
 
         <!-- 主內容區域 -->
@@ -477,7 +478,7 @@
                 <div class="stats-area">
                     <div class="stat-item">
                         <span class="stat-label">班級人數：</span>
-                        <span class="stat-value" id="totalStudents">31</span>
+                        <span class="stat-value" id="totalStudents">30</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">已被選中：</span>
@@ -485,19 +486,11 @@
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">剩余人數：</span>
-                        <span class="stat-value" id="remainingCount">31</span>
+                        <span class="stat-value" id="remainingCount">30</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">選人狀態：</span>
                         <span class="stat-value" id="selectionStatus">待命中</span>
-                    </div>
-                </div>
-
-                <!-- 音效控制 -->
-                <div class="audio-controls">
-                    <div class="audio-toggle">
-                        <span>音效開關</span>
-                        <div class="toggle-switch active" id="audioToggle" onclick="toggleAudio()"></div>
                     </div>
                 </div>
 
@@ -514,19 +507,18 @@
     <script src="../js/text-cloud.js"></script>
     <script src="../js/student-picker.js"></script>
     <script>
-        // 班級專屬數據 - 一年 12 班學生
-        const defaultClass12Data = [
-            { seat: '01', name: '吳冠緯' }, { seat: '02', name: '李定曄' }, { seat: '03', name: '李嘉祥' },
-            { seat: '04', name: '李榕朋' }, { seat: '05', name: '林庭佐' }, { seat: '06', name: '柯旻佑' },
-            { seat: '07', name: '張元羿' }, { seat: '08', name: '張和尊' }, { seat: '09', name: '張宸睿' },
-            { seat: '10', name: '郭子爵' }, { seat: '11', name: '陳奕銜' }, { seat: '12', name: '辜敬愷' },
-            { seat: '13', name: '黃凡軒' }, { seat: '14', name: '黃啟翔' }, { seat: '15', name: '劉品謙' },
-            { seat: '16', name: '劉源治' }, { seat: '17', name: '呂帛妍' }, { seat: '18', name: '李昕恬' },
-            { seat: '19', name: '林宣妤' }, { seat: '20', name: '邱姵琁' }, { seat: '21', name: '金品岑' },
-            { seat: '22', name: '徐孟妍' }, { seat: '23', name: '馬儀澄' }, { seat: '24', name: '陳俐靜' },
-            { seat: '25', name: '陳羿諠' }, { seat: '26', name: '黃丞薇' }, { seat: '27', name: '黃喬莉' },
-            { seat: '28', name: '劉奇恩' }, { seat: '29', name: '劉芷睿' }, { seat: '30', name: '劉凌彤' },
-            { seat: '31', name: '謝婷亦' }
+        // 班級專屬數據 - 一年 7 班學生（保留轉出學生的座號）
+        const defaultClass7Data = [
+            { seat: '01', name: '李岳洋' }, { seat: '02', name: '李易駿' }, { seat: '03', name: '周兆鑫' },
+            { seat: '04', name: '洪霽睿' }, { seat: '05', name: '翁晨祐' }, { seat: '06', name: '陳昱維' },
+            { seat: '07', name: '陳柏安' }, { seat: '08', name: '陳韋愷' }, { seat: '09', name: '陳祐楷' },
+            { seat: '10', name: '黃宥綸' }, { seat: '11', name: '黃帷融' }, { seat: '13', name: '劉修齊' },
+            { seat: '14', name: '蔡亞辰' }, { seat: '15', name: '蕭擇諒' }, { seat: '16', name: '薛守智' },
+            { seat: '17', name: '李沛珊' }, { seat: '18', name: '林亭瑋' }, { seat: '19', name: '林宥郡' },
+            { seat: '20', name: '邱姸珺' }, { seat: '21', name: '洪岱筠' }, { seat: '22', name: '莊予涵' },
+            { seat: '23', name: '陳雨柔' }, { seat: '24', name: '陳茹筠' }, { seat: '26', name: '黃可馨' },
+            { seat: '27', name: '劉羽真' }, { seat: '28', name: '劉宥慈' }, { seat: '29', name: '劉恩妤' },
+            { seat: '30', name: '顏睿嬅' }, { seat: '31', name: '羅沂靖' }, { seat: '32', name: '羅帷恩' }
         ];
 
         let currentClassData = [];
@@ -541,7 +533,7 @@
                 document.getElementById('loadingOverlay').classList.add('fade-out');
             }, 1000);
 
-            const classData = getStudentData('class-12', '一年 12 班', defaultClass12Data);
+            const classData = getStudentData('class-7', '一年 7 班', defaultClass7Data);
             currentClassData = classData.students;
 
             const textCloudArea = document.getElementById('textCloudArea');
@@ -549,11 +541,11 @@
             initializeStudentPicker(currentClassData);
             initializeAudio();
 
-            console.log('一年 12 班頁面初始化完成 🎓⚙️');
+            console.log('一年 7 班頁面初始化完成 🎓⚙️');
         }
 
         function openManager() {
-            openStudentManager('class-12', '一年 12 班', currentClassData, (students) => {
+            openStudentManager('class-7', '一年 7 班', currentClassData, (students) => {
                 currentClassData = students;
                 location.reload();
             });
